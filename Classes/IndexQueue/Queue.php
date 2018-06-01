@@ -151,6 +151,13 @@ class Queue
         }
 
         foreach ($indexingConfigurations as $indexingConfigurationName) {
+
+            // TODO: Remove this
+            $this->logger->log(
+                SolrLogManager::NOTICE,
+                '[initialize()] initializeIndexingConfiguration'
+            );
+
             $initializationStatus[$indexingConfigurationName] = $this->initializeIndexingConfiguration(
                 $site,
                 $indexingConfigurationName
@@ -190,9 +197,20 @@ class Queue
      */
     protected function initializeIndexingConfiguration(Site $site, $indexingConfigurationName)
     {
+        // TODO: Remove this
+        $this->logger->log(
+            SolrLogManager::NOTICE,
+            '[initializeIndexingConfiguration()] deleteItemsBySite()'
+        );
+
         // clear queue
         $this->deleteItemsBySite($site, $indexingConfigurationName);
 
+        // TODO: Remove this
+        $this->logger->log(
+            SolrLogManager::NOTICE,
+            '[initializeIndexingConfiguration()] getSolrConfiguration()'
+        );
         $solrConfiguration = $site->getSolrConfiguration();
 
         $tableToIndex = $solrConfiguration->getIndexQueueTableNameOrFallbackToConfigurationName($indexingConfigurationName);
@@ -207,6 +225,11 @@ class Queue
         $indexConfiguration = $solrConfiguration->getIndexQueueConfigurationByName($indexingConfigurationName);
         $initializer->setIndexingConfiguration($indexConfiguration);
 
+        // TODO: Remove this
+        $this->logger->log(
+            SolrLogManager::NOTICE,
+            '[initializeIndexingConfiguration()] initialize()'
+        );
         return $initializer->initialize();
     }
 

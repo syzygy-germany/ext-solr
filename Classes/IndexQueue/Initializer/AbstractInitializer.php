@@ -159,9 +159,19 @@ abstract class AbstractInitializer implements IndexQueueInitializer
         $logData = ['query' => $initializationQuery];
 
         try {
+            $this->logger->log(
+                SolrLogManager::NOTICE,
+                '[initialize()] initializeByNativeSQLStatement()',
+                [$logData['rows']]
+            );
             $logData['rows'] = $this->queueItemRepository->initializeByNativeSQLStatement($initializationQuery);
         } catch (DBALException $DBALException) {
             $logData['error'] = $DBALException->getCode() . ': ' . $DBALException->getMessage();
+            $this->logger->log(
+                SolrLogManager::NOTICE,
+                '[initialize()] ERROR',
+                [$logData['error']]
+            );
         }
 
         $this->logInitialization($logData);

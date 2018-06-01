@@ -66,6 +66,11 @@ class SolrWriteService extends AbstractSolrService
                     'exception' => $e->getMessage()
                 ]
             );
+            // TODO: Remove this (previous log gets truncated)
+            $this->logger->log(
+                SolrLogManager::ERROR,
+                $e->getMessage()
+            );
         }
 
         return [
