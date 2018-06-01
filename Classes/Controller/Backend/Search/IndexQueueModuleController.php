@@ -69,7 +69,17 @@ class IndexQueueModuleController extends AbstractModuleController
      */
     protected function initializeAction()
     {
+        $logger = GeneralUtility::makeInstance(SolrLogManager::class, __CLASS__);
+        $logger->log(
+            SolrLogManager::NOTICE,
+            '[PRESTART initializeAction()]',
+            [GeneralUtility::_POST('tx_solr-index-queue-initialization')]
+        );
         parent::initializeAction();
+        $logger->log(
+            SolrLogManager::NOTICE,
+            '[PRESTART initializeAction() END]'
+        );
         $this->indexQueue = GeneralUtility::makeInstance(Queue::class);
     }
 

@@ -27,6 +27,7 @@ namespace ApacheSolrForTypo3\Solr\Controller\Backend\Search;
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Solr\Domain\Site\SiteRepository;
 use ApacheSolrForTypo3\Solr\Site;
+use ApacheSolrForTypo3\Solr\System\Logging\SolrLogManager;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection as SolrCoreConnection;
 use ApacheSolrForTypo3\Solr\System\Mvc\Backend\Component\Exception\InvalidViewObjectNameException;
 use ApacheSolrForTypo3\Solr\System\Mvc\Backend\Service\ModuleDataStorageService;
@@ -113,7 +114,12 @@ abstract class AbstractModuleController extends ActionController
 
         /* @var SiteRepository $siteRepository */
         $siteRepository = GeneralUtility::makeInstance(SiteRepository::class);
-
+        $logger = GeneralUtility::makeInstance(SolrLogManager::class, __CLASS__);
+        $logger->log(
+            SolrLogManager::NOTICE,
+            '[PRESTART parent::initializeAction()]',
+            [$siteRepository->getAvailableSites()]
+        );
         // Autoselect the only one available site
         if (count($siteRepository->getAvailableSites()) == 1) {
             $this->selectedSite = $siteRepository->getFirstAvailableSite();
@@ -128,6 +134,11 @@ abstract class AbstractModuleController extends ActionController
         try {
             $this->selectedSite = $siteRepository->getSiteByPageId($this->selectedPageUID);
         } catch (\InvalidArgumentException $exception) {
+            $logger->log(
+                SolrLogManager::NOTICE,
+                '[PRESTART parent::initializeAction() InvalidArgumentException]',
+                [$this->selectedPageUID]
+            );
             return;
         }
     }
