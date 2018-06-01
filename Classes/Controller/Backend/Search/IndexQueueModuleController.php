@@ -152,18 +152,25 @@ class IndexQueueModuleController extends AbstractModuleController
         $initializedIndexingConfigurations = [];
 
         $indexingConfigurationsToInitialize = GeneralUtility::_POST('tx_solr-index-queue-initialization');
+        // TODO: Remove this
+        /** @var SolrLogManager $logger */
+        $logger = GeneralUtility::makeInstance(SolrLogManager::class, __CLASS__);
+        $logger->log(
+            SolrLogManager::NOTICE,
+            '[START initializeIndexQueueAction()] get $indexingConfigurationsToInitialize',
+            [$indexingConfigurationsToInitialize]
+        );
         if ((!empty($indexingConfigurationsToInitialize)) && (is_array($indexingConfigurationsToInitialize))) {
             // initialize selected indexing configuration
 
-            // TODO: Remove this
-            /** @var SolrLogManager $logger */
-            $logger = GeneralUtility::makeInstance(SolrLogManager::class, __CLASS__);
-            $logger->log(
-                SolrLogManager::NOTICE,
-                '[START] initialize selected indexing configuration'
-            );
-
             foreach ($indexingConfigurationsToInitialize as $indexingConfigurationName) {
+                // TODO: Remove this
+                /** @var SolrLogManager $logger */
+                $logger->log(
+                    SolrLogManager::NOTICE,
+                    '[initializeIndexQueueAction()] initialize selected indexing configuration',
+                    [$indexingConfigurationName]
+                );
                 $initializedIndexingConfiguration = $this->indexQueue->initialize(
                     $this->selectedSite,
                     $indexingConfigurationName
